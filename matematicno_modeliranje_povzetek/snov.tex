@@ -1,0 +1,147 @@
+\documentclass[a4paper,11pt]{article}
+\usepackage{a4wide}
+\usepackage{fullpage}
+\usepackage[utf8x]{inputenc}
+\usepackage[slovene]{babel}
+\selectlanguage{slovene}
+
+\usepackage{amsfonts}
+\usepackage{mathtools}
+
+\begin{document}
+\textsc{\Large Matematično modeliranje 2014/2015}\\[0.5cm]
+
+\section{Posplošeni inverz}
+Posplošeni inverz matrike \(A\) je matrika \(G\), za katero velja \(AGA=A\). Algoritem? Poiscemo podmatrikomatriko A \(r\times r\), kjer je \(r=rang(A)\), podmatriko obrnemo in jo tako vstavimo v transponirano \(A * 0\).
+
+\subsection{Moore-Penroseov inverz \(A^+\)}
+To je takšna matrika \(A^+ \subset \mathbb{R}^{n\times m}\), da velja:
+\begin{enumerate}
+	\item \(AA^+A = A\)
+	\item \(A^+AA^+ = A^+\)
+	\item \((A^+A)^T = A^+A\) - \(A^+A\) je simetricna
+	\item \((AA^+)^T = AA^+\) - \(AA^+\) je simetricna
+\end{enumerate}
+Lastnosti:
+\begin{itemize}
+	\item obstaja en sam tak inverz
+	\item \((A^+)^+ = A\)
+	\item če je A obrnljiva, potem \(A^+ = A^{-1}\)
+	\item če je \(A^TA\) obrnljiva, potem \(A^+ = (A^TA)^{-1}A^T\)
+	\item če je \(AA^T\) obrnljiva, potem \(A^+ = A^T(AA^T)^{-1}\)
+\end{itemize}
+
+\subsection{SVD razcep singularnih vrednosti}
+Za \(B \subset \mathbb{R}^{n\times n}\) morda obstaja diagonalna matrika D, za katero velja \[B = PDP^{-1}\]
+SVD razcep pa naredi \[A = U\Sigma V^T,\]
+kjer je \(\Sigma\) matrika s singularnimi vrednostmi v diagonali \(\sigma _i = \sqrt{\lambda _i}\).
+Postopek za pridobivanje Moore-Penroseovega inverza je sledeč:
+\begin{enumerate}
+	\item izracunaj \(\sigma _1, \sigma _2, \ldots, \sigma _n\) in vektorje \(v_1, v_2, \ldots, v_n\) v \(A^TA\)
+	\item izracunaj \(\sigma _1, \sigma _2, \ldots, \sigma _m\) in vektorje \(u_1, u_2, \ldots, u_m\) v \(AA^T\)
+	\item \(\Sigma\) je \(m\times n\) matrika, v diagonali so \(\sqrt{\lambda _1}, \sqrt{\lambda _2}, \ldots, \sqrt{\lambda _{\min(n,m)}}\)
+	\item \(V = [v_1, v_2, \ldots, v_n]\)
+	\item \(U = [u_1, u_2, \ldots, u_m]\)
+	\item \(A^+ = V\Sigma ^+U^T\)
+\end{enumerate}
+
+\newpage
+\section{Markovske verige}
+\(X_1, X_2, \ldots, X_n\) je zaporedje slucajnih spremenljivk, ki so lahko odvisne.
+Zaloge vrednosti so enake in koncne \(S = \{s_1 , s_2 , \ldots , s_r \}\). Verjetnost dogodka je odvisna sam od prejsnjega dogodka.
+
+\[P(X_{n+1} = s_j | X_1,\ldots,X_n) = P(X_{n+1} = s_j | X_n)\]
+Predstavimo z matriko prehodov stanj. Stanje je lahko \textbf{prehodno} (obstaja verjetnost, da se v to stanje nikoli vec ne vrnemo), \textbf{povratno} (z verjetnostjo 1 to stanje obiscemo neskoncnokrat), \textbf{ekvivalentno} (ce iz enega stanja pridemo v drugega in nazaj v nekem stevilu korakov - tako se tvorijo ekvivalencni razredi, kjer so vsa stanja istega tipa), \textbf{absorbirajoce} (ko pridemo v to stanje, v njem ostanemo za vedno).
+\subsection{Absorbirajoca MV}
+\[P = \begin{bmatrix}
+	Q & R \\
+	0 & I
+	\end{bmatrix}
+\]
+To konvergira k
+\[lim_{n \to \infty} P^n = \begin{bmatrix}
+	0 & N R \\
+	0 & I
+	\end{bmatrix}
+\]
+V desnem zgornjem delu matrike se pojavijo verjetnosti prehoda v doloceno absorbirajoce stanje. \(N\) nam pove pricakovano stevilo obiskov stanj pred prehodom v absorbirajoce stanje.
+\[N = (I-Q)^{-1}\]
+Pricakovano stevilo korakov pred prehodom v absorbirajoce stanje nam pove vektor \(Ne\), kjer je \(e\) vektor enic.
+
+Limitna porazdelitev: ce je 1 edina lastna vrednost \(P\), ki je po absolutni vrednosti enaka 1, je limita porazdelitve \(P^T - I\).
+
+%TODO: tista zadeva s pi
+
+\section{Parametrizirane krivulje}
+Tangenta: \[y - y(t_0) = \frac{\dot{y}(t_0)}{\dot{x}(t_0)} (x - x(t_0))\]
+Dolzina loka (dolzino \(\dot{r}\) pogosto najlazje dobimo s kvadriranjem, npr \(\|\dot{\vec{r}}\|^2 = a^2 + b^2\), ce je \(r = (a,b)\)): \[l = \int_{a}^{b} \|\dot{\vec{r}}\|dt\]
+Naravni parameter \(s\) je dolzina loka od \(t=0\) do \(t=s\).
+Ploscina poljubne krivulje: \[P = \frac{1}{2} \int_{a}^{b} |x \dot{y} - y \dot{x}| dt\]
+Ploscina med krivuljo in osjo x:\[P = \int_{a}^{b} y(t) \dot{x}(t) dt\]
+
+\subsection{Polarni koordinatni sistem}
+\[ x = r \cos(\phi)
+\]
+\[
+  y = r \sin(\phi)
+\]
+\[
+	  r = \sqrt{x^2+y^2}
+\]
+\[
+	  \phi = \arctan{\frac{y}{x}}
+\]
+\section{Linearna aproksimacija}
+Linearna aproksimacija v tocki \(\vec{a}\):
+\[
+	L_{\vec{a}}(\vec{x}) = \vec{f}(\vec{a}) + J(\vec{a})(\vec{x} - \vec{a})
+\]
+\(J\) je Jacobijeva matrika:
+\[
+	J =
+	\begin{bmatrix}
+		\frac{\partial f_1}{\partial x_1} & \cdots & \frac{\partial f_1}{\partial x_n} \\[0.3em]
+		\vdots & \ddots & \vdots \\[0.3em]
+		\frac{\partial f_m}{\partial x_1} & \cdots & \frac{\partial f_m}{\partial x_n} \\
+	\end{bmatrix}
+\]
+Vrstice v Jacobijevi matriki so gradienti funkcij.
+\section{Diferencialne enacbe}
+\subsection{DE 1. reda}
+\[y'(x) + p(x)y(x) = g(x)\]
+\begin{enumerate}
+	\item resimo homogeni del \(y'(x) + p(x)y(x) = 0\)
+	\item variacija konstante (odvajamo homogeno resitev)
+	\item \(y\) in \(y'\) vstavimo v homogeni del resitve
+	\item resimo za zacetni pogoj in dobimo splosno resitev
+\end{enumerate}
+\
+\[y(x,c) = y_h(x,c) + y_p(x)\]
+
+\subsection{Eulerjeva metoda}
+\[
+	y' = f(t,y)
+\]
+\[
+	y_0 = y(t_0)
+\]
+\[
+	y_{i+1} = y_i + h f(x_i,y_i)
+\]
+\[
+	i = 1,\ldots,n-1
+\]
+
+\subsection{Sistem DE 1. reda}
+\[\dot{\vec{x}} = A(t)\vec{x}+\vec{f}(t)\]
+Ce je \(f(t) = 0\), je sistem homogen. Ce je A diagonalna matrike, je splosna resitev \(x_i = C_i e^{\lambda _i t}\). Ce ima A realne lastne vrednosti in bazo iz lastnih vektorjev \(P^{-1}AP = D\), \(P = [\vec{v_1},\ldots,\vec{v_n}]\) za \(\vec{y} = P^{-1}\vec{x}\) dobimo sistem \(\dot{\vec{y}} = D\vec{y}\), resitev pa je \(\vec{x}(t) = C_1 e^{\lambda _1 t}\vec{v_1} + \cdots + C_n e^{\lambda _n t}\vec{v_n} \).
+Za kompleksne l.v. \(\lambda _{1,2} = \alpha \pm i\beta\) in \(\vec{v_{1,2}} = \vec{u} \pm i\vec{w}\) je \(\vec{x}(t) = C_1 e^{(\alpha + i\beta)t}(\vec{u} + i\vec{w}) +  C_2 e^{(\alpha + i\beta)t}(\vec{u} + i\vec{w})  = e^{\alpha t} \cos{\beta t}(C_1 \vec{u} - C_2 \vec{w}) - e^{\alpha t} \sin{\beta t}(C_1 \vec{u} + C_2 \vec{w})\)
+
+Vrsta tocke:
+\begin{itemize}
+	\item \(0<\lambda _1 < \lambda _2\) tockast izvor
+	\item \(\lambda _1 < 0 < \lambda _2\) sedlo
+	\item \(\lambda _1 < \lambda _2 < 0\) tockast ponor
+\end{itemize}
+
+\end{document}
